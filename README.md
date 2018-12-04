@@ -6,12 +6,12 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
 ### Patterns Implemented
 1. Oscillators
-- Toad
+  - Toad
 2. Spaceships
-- Simple glider
-- Edge repairing spaceship
+  - Simple glider
+  - Edge repairing spaceship
 3. Gun
-- Gosper glider gun
+  - Gosper glider gun
 
 ### Usage
 ```
