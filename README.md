@@ -13,8 +13,11 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 3. __Guns__
   - Gosper glider gun
   
-  a | b
-  c | d
+  
+Type | Pattern
+---- | -------
+a | b
+c | d
 
 ### Usage
 ```
