@@ -12,6 +12,9 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
   - Edge repairing spaceship
 3. __Guns__
   - Gosper glider gun
+  
+  a | b
+  c | d
 
 ### Usage
 ```
