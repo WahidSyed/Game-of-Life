@@ -22,8 +22,8 @@ Oscillator | Beacon
 Oscillator | Pulsar
 Oscillator | Pentadecathlon
 Oscillator | Kok's galaxy
-Spaceship | Edge repairing spaceship
 Spaceship | Simple glider
+Spaceship | Edge repairing spaceship
 Gun | Gosper's glider gun
 
 ### Usage
