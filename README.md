@@ -7,16 +7,17 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 ### Patterns Implemented
 1. __Oscillators__
   - Toad
-2. __Spaceships__
-  - Simple glider
+2. ____
+  - 
   - Edge repairing spaceship
-3. __Guns__
-  - Gosper glider gun
+3. ____
+  
   
   
 Type | Pattern
 ---- | -------
-a | b
+Spaceships | - Simple glider
+Guns | - Gosper glider gun
 c | d
 
 ### Usage
