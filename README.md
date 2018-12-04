@@ -1,9 +1,8 @@
+# Conway's Game of Life
 
 <p align="left">
   <img src="./demo.png" width="380" >
 </p>
-
-# Conway's Game of Life
 
 My implementation of Conway's Game of Life in Rust. It uses a Piston game engine to render the graphics window.
 
