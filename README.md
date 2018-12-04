@@ -11,10 +11,10 @@ GOL theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 ### Patterns Implemented  
 Type | Pattern
 ---- | -------
-oscillator | toad
 gun | Gosper glider gun
-spaceship | Simple glider
+oscillator | toad
 spaceship | edge repairing spaceship
+spaceship | simple glider
 
 ### Usage
 ```
