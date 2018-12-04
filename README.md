@@ -7,9 +7,11 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 ### Patterns Implemented
 Oscillators
 - toad
+
 Spaceships
 - simple glider
 - edge repairing spaceship
+
 Gun
 - gosper glider gun
 
