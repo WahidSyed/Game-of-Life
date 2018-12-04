@@ -1,8 +1,7 @@
 
-
-<div style="text-align:center; border: 1px solid red;">
+<p align="center">
   <img src="./demo.png" width="350" >
-</div>
+</p>
 
 # Conway's Game of Life
 
