@@ -12,9 +12,9 @@ GOL theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 Type | Pattern
 ---- | -------
 Oscillator | Toad
+Gun | Gosper glider gun
 Spaceship | Simple glider
 Spaceship | Edge repairing spaceship
-Gun | Gosper glider gun
 
 ### Usage
 ```
