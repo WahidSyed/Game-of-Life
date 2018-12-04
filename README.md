@@ -1,5 +1,5 @@
 
-![alt text](./demo.png)
+![alt text](./demo.png | width=150)
 
 # Conway's Game of Life
 
