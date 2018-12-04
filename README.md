@@ -8,8 +8,7 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 1. __Oscillators__
   - Toad
 2. ____
-  - 
-  - Edge repairing spaceship
+
 3. ____
   
   
@@ -17,6 +16,7 @@ Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 Type | Pattern
 ---- | -------
 Spaceships | - Simple glider
+- Edge repairing spaceship
 Guns | - Gosper glider gun
 c | d
 
