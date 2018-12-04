@@ -4,7 +4,7 @@ use patterns::Pattern;
 use std::time::Duration;
 use std::thread;
 
-const TICK_RATE: u64 = 10; // ms
+const TICK_RATE: u64 = 0; // ms
 
 #[derive(Debug)]
 pub struct Universe {

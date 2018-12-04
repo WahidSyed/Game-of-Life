@@ -1,4 +1,6 @@
 
+const ALIVE: char = '*';
+const DEAD: char = '.';
 
 pub trait Pattern {
     fn x(&self) -> i32;
@@ -14,6 +16,18 @@ pub trait Pattern {
         let r = ((row % h) + h) % h;
         let c = ((col % w) + w) % w;
         (r * w + c) as usize
+    }
+
+    fn print(&mut self) {
+        for r in 0..self.height() {
+            for c in 0..self.width() {
+                match self.structure()[self.get_index(r as i32, c as i32)] {
+                    true => print!("{} ", ALIVE),
+                    false => print!("{} ", DEAD),
+                }
+            }
+            println!();
+        }
     }
 
 }

@@ -18,6 +18,19 @@ mod patterns;
 mod spaceships;
 mod oscillators;
 mod guns;
+mod still_lifes;
+
+use still_lifes::Block;
+use still_lifes::Beehive;
+use still_lifes::Loaf;
+use still_lifes::Boat;
+use still_lifes::Tub;
+
+use oscillators::Blinker;
+use oscillators::Beacon;
+use oscillators::Pulsar;
+use oscillators::Pentadecathlon;
+use oscillators::KoksGalaxy;
 
 use universe::Universe;
 use patterns::Pattern;
@@ -65,6 +78,42 @@ fn main() {
         &canvas,
         &TextureSettings::new()
     ).unwrap();
+
+
+
+    let mut _block: Block = Pattern::new(5, 5);
+    // _block.print();
+    
+    let mut _beehive: Beehive = Pattern::new(5, 5);
+    // _beehive.print();
+
+    let mut _loaf: Loaf = Pattern::new(5, 5);
+    // _loaf.print();
+
+    let mut _boat: Boat = Pattern::new(5, 5);
+    // _boat.print();
+
+    let mut _tub: Tub = Pattern::new(5, 5);
+    // _tub.print();
+
+    let mut _blinker: Blinker = Pattern::new(5, 5);
+    // _blinker.print();
+
+    let mut _beacon: Beacon = Pattern::new(5, 5);
+    // _beacon.print();
+
+    let mut _pulsar: Pulsar = Pattern::new(5, 20);
+    // _pulsar.print();
+
+    let mut _pentadecathlon: Pentadecathlon = Pattern::new(5, 5);
+    // _pentadecathlon.print();
+
+    let mut _koks_galaxy: KoksGalaxy = Pattern::new(5, 40);
+    _koks_galaxy.print();
+
+    universe.add_pattern(&mut _pulsar);
+    universe.add_pattern(&mut _pentadecathlon);
+    universe.add_pattern(&mut _koks_galaxy);
 
     while let Some(e) = window.next() {
 
