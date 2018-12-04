@@ -1,4 +1,13 @@
 
+mod patterns;
+use patterns::Pattern;
+
+mod spaceships;
+use spaceships::Glider;
+
+mod oscillators;
+use oscillators::Toad;
+
 use std::time::Duration;
 use std::thread;
 
@@ -8,6 +17,7 @@ const HEIGHT: u32 = 80;
 const ALIVE: char = '*';
 const DEAD: char = '.';
 const MILLIS: u64 = 100;
+
 
 #[derive(Debug)]
 struct Universe {
@@ -118,96 +128,6 @@ impl Universe {
 }
 
 
-trait Pattern {
-    fn x(&self) -> i32;
-    fn y(&self) -> i32;
-    fn new(x: i32, y: i32) -> Self;
-    fn size(&self) -> u8;
-    fn structure(&mut self) -> Vec<bool>;
-
-    fn get_index(&self, row: i32, col: i32) -> usize {
-        let h = self.size() as i32;
-        let w = self.size() as i32;
-        let r = ((row % h) + h) % h;
-        let c = ((col % w) + w) % w;
-        (r * w + c) as usize
-    }
-
-    fn print(&mut self) {
-        for r in 0..self.size() {
-            for c in 0..self.size() {
-                match self.structure()[self.get_index(r as i32, c as i32)] {
-                    true => print!("{} ", ALIVE),
-                    false => print!("{} ", DEAD),
-                }
-            }
-            println!();
-        }
-    }
-}
-
-/* Glider */
-struct Glider {
-    x: i32,
-    y: i32,
-    structure: Vec<bool>,
-}
-
-impl Glider {
-    const SIZE: u8 = 3;
-}
-
-impl Pattern for Glider {
-    fn x(&self) -> i32 { self.x }
-    fn y(&self) -> i32 { self.y }
-    fn size(&self) -> u8 { Glider::SIZE }
-    fn structure(&mut self) -> Vec<bool> { self.structure.clone() }
-
-    fn new(x: i32, y: i32) -> Glider {
-        let mut glider = Glider {
-            x, y,
-            structure: vec![false; (Glider::SIZE * Glider::SIZE) as usize],
-        };
-        glider.structure = vec![
-            false, true, false,
-            false, false, true,
-            true, true, true,
-        ];
-        glider
-    }
-}
-
-/* Toad */
-struct Toad {
-    x: i32,
-    y: i32,
-    structure: Vec<bool>,
-}
-
-impl Toad {
-    const SIZE: u8 = 4;
-}
-
-impl Pattern for Toad {
-    fn x(&self) -> i32 { self.x }
-    fn y(&self) -> i32 { self.y }
-    fn size(&self) -> u8 { Toad::SIZE }
-    fn structure(&mut self) -> Vec<bool> { self.structure.clone() }
-
-    fn new(x: i32, y: i32) -> Toad {
-        let mut toad = Toad {
-            x, y,
-            structure: vec![false; (Toad::SIZE * Toad::SIZE) as usize],
-        };
-        toad.structure = vec![
-            false, false, true, false,
-            true, false, false, true,
-            true, false, false, true,
-            false, true, false, false,
-        ];
-        toad
-    }
-}
 
 
 fn main() {
