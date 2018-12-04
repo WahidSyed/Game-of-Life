@@ -4,13 +4,14 @@ extern crate image as im;
 use piston_window::*;
 
 const BLOCK_SIZE: f64 = 5.0;
-const GAME_WIDTH: u32 = 80;
-const GAME_HEIGHT: u32 = 80;
+const GAME_WIDTH: u32 = 120;
+const GAME_HEIGHT: u32 = 120;
 const WINDOW_WIDTH: u32 = GAME_WIDTH * BLOCK_SIZE as u32;
 const WINDOW_HEIGHT: u32 = GAME_HEIGHT * BLOCK_SIZE as u32;
 
 const GRAY: [f32; 4] = [0.2, 0.2, 0.2, 1.0];
 const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
+const DARK: [f32; 4] = [0.1, 0.1, 0.1, 1.0];
 
 mod universe;
 mod patterns;
@@ -31,21 +32,28 @@ fn main() {
     let mut universe = Universe::new(GAME_WIDTH, GAME_HEIGHT);
 
     let mut _edge_repair1: EdgeRepair1 = Pattern::new(60, 10);
-    let mut _gun: GospersGliderGun = Pattern::new(5, 5);
+    let mut _edge_repair2: EdgeRepair1 = Pattern::new(110, 50);
+    let mut _gun1: GospersGliderGun = Pattern::new(5, 5);
+    let mut _gun2: GospersGliderGun = Pattern::new(50, 45);
+    let mut _gun3: GospersGliderGun = Pattern::new(30, 75);
     let mut _glider: Glider = Pattern::new(15, 22);
     let mut _toad1: Toad = Pattern::new(26, 20);
     let mut _toad2: Toad = Pattern::new(30, 49);
+    let mut _toad2: Toad = Pattern::new(50, 20);
     
     universe.add_pattern(&mut _glider);
     universe.add_pattern(&mut _toad1);
     universe.add_pattern(&mut _toad2);
     universe.add_pattern(&mut _edge_repair1);
-    universe.add_pattern(&mut _gun);
+    universe.add_pattern(&mut _edge_repair2);
+    universe.add_pattern(&mut _gun1);
+    universe.add_pattern(&mut _gun2);
+    universe.add_pattern(&mut _gun3);
 
     let opengl = OpenGL::V3_2;
     let (width, height) = (WINDOW_WIDTH, WINDOW_HEIGHT);
     let mut window: PistonWindow =
-        WindowSettings::new("piston: paint", (width, height))
+        WindowSettings::new("Game of Life", (width, height))
         .exit_on_esc(true)
         .opengl(opengl)
         .build()
@@ -65,7 +73,7 @@ fn main() {
 
             window.draw_2d(&e, |c, g| {
 
-                clear(GRAY, g);
+                clear(DARK, g);
                 image(&texture, c.transform, g);
 
                 for hi in 0..GAME_HEIGHT {
