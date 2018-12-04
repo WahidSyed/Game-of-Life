@@ -1,6 +1,6 @@
 
 
-<div style="text-align:center">
+<div style="text-align:center; border: 1px solid red;">
   <img src="./demo.png" width="350" >
 </div>
 
