@@ -4,21 +4,13 @@ My implementation of Conway's Game of Life in Rust. It uses a Piston game engine
 
 Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
-### Patterns Implemented
-1. __Oscillators__
-  - Toad
-2. ____
-
-3. ____
-  
-  
-  
+### Patterns Implemented  
 Type | Pattern
 ---- | -------
-Spaceships | - Simple glider
-- Edge repairing spaceship
-Guns | - Gosper glider gun
-c | d
+Oscillator | Toad
+Spaceship | Simple glider
+Spaceship | Edge repairing spaceship
+Gun | Gosper glider gun
 
 ### Usage
 ```
