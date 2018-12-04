@@ -1,6 +1,6 @@
 
-<p align="center">
-  <img src="./demo.png" width="350" >
+<p align="left">
+  <img src="./demo.png" width="380" >
 </p>
 
 # Conway's Game of Life
