@@ -4,9 +4,13 @@ use patterns::Pattern;
 
 mod spaceships;
 use spaceships::Glider;
+use spaceships::EdgeRepair1;
 
 mod oscillators;
 use oscillators::Toad;
+
+mod guns;
+use guns::GospersGliderGun;
 
 use std::time::Duration;
 use std::thread;
@@ -116,10 +120,10 @@ impl Universe {
     }
 
     fn add_pattern<P: Pattern>(&mut self, p: &mut P) {
-        for x in 0..p.size() {
-            for y in 0..p.size() {
+        for x in 0..p.height() {
+            for y in 0..p.width() {
                 let i1 = p.get_index(x as i32, y as i32);
-                let i2 = self.get_index((x + p.x() as u8) as i32, (y + p.y() as u8) as i32);
+                let i2 = self.get_index((x + p.x() as u32) as i32, (y + p.y() as u32) as i32);
                 self.cells[i2] = p.structure()[i1];
             }
         }
@@ -133,13 +137,20 @@ impl Universe {
 fn main() {
     let mut universe = Universe::new(WIDTH, HEIGHT);
 
+    let mut edge_repair1: EdgeRepair1 = Pattern::new(60, 20);
+
+    let mut gun: GospersGliderGun = Pattern::new(4, 4);
     let mut glider: Glider = Pattern::new(5, 7);
     let mut toad1: Toad = Pattern::new(30, 30);
-    let mut toad2: Toad = Pattern::new(15, 27);
+    let mut toad2: Toad = Pattern::new(25, 37);
 
-    universe.add_pattern(&mut toad1);
+    gun.print();
+
+    // universe.add_pattern(&mut toad1);
     universe.add_pattern(&mut toad2);
-    universe.add_pattern(&mut glider);
+    // universe.add_pattern(&mut glider);
+    universe.add_pattern(&mut gun);
+    universe.add_pattern(&mut edge_repair1);
 
     universe.iterate(300);
 }
