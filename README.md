@@ -1,3 +1,6 @@
+
+![alt text](./demo.png)
+
 # Conway's Game of Life
 
 My implementation of Conway's Game of Life in Rust. It uses a Piston game engine to render the graphics window.
