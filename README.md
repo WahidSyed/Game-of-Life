@@ -1,4 +1,4 @@
-# Conway's Game of Life
+# Rusty Life
 
 <p align="left">
   <img src="./demo.png" width="300" >
