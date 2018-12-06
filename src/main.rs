@@ -1,11 +1,12 @@
 extern crate piston_window;
 extern crate image as im;
+extern crate find_folder;
 
 use piston_window::*;
 
 const BLOCK_SIZE: f64 = 5.0;
-const GAME_WIDTH: u32 = 120;
-const GAME_HEIGHT: u32 = 120;
+const GAME_WIDTH: u32 = 100;
+const GAME_HEIGHT: u32 = 100;
 const WINDOW_WIDTH: u32 = GAME_WIDTH * BLOCK_SIZE as u32;
 const WINDOW_HEIGHT: u32 = GAME_HEIGHT * BLOCK_SIZE as u32;
 
@@ -13,7 +14,7 @@ const GRAY: [f32; 4] = [0.2, 0.2, 0.2, 1.0];
 const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 const DARK: [f32; 4] = [0.1, 0.1, 0.1, 1.0];
 
-mod universe;
+mod life;
 mod patterns;
 mod spaceships;
 mod oscillators;
@@ -32,7 +33,7 @@ use oscillators::Pulsar;
 use oscillators::Pentadecathlon;
 use oscillators::KoksGalaxy;
 
-use universe::Universe;
+use life::LifeAlgorithm;
 use patterns::Pattern;
 use spaceships::Glider;
 use spaceships::EdgeRepair1;
@@ -40,9 +41,44 @@ use oscillators::Toad;
 use guns::GospersGliderGun;
 
 
+// A Frames Per Second counter.
+
+use std::collections::VecDeque;
+use std::time::{Duration, Instant};
+
+/// Measures Frames Per Second (FPS).
+pub struct FPSCounter {
+    /// The last registered frames.
+    last_second_frames: VecDeque<Instant>
+}
+
+impl FPSCounter {
+    /// Creates a new FPSCounter.
+    pub fn new() -> FPSCounter {
+        FPSCounter {
+            last_second_frames: VecDeque::with_capacity(128)
+        }
+    }
+
+    /// Updates the FPSCounter and returns number of frames.
+    pub fn tick(&mut self) -> usize {
+        let now = Instant::now();
+        let a_second_ago = now - Duration::from_secs(1);
+
+        while self.last_second_frames.front().map_or(false, |t| *t < a_second_ago) {
+            self.last_second_frames.pop_front();
+        }
+
+        self.last_second_frames.push_back(now);
+        self.last_second_frames.len()
+    }
+}
+
+
+
 fn main() {
 
-    let mut universe = Universe::new(GAME_WIDTH, GAME_HEIGHT);
+    let mut life = LifeAlgorithm::new(GAME_WIDTH, GAME_HEIGHT);
 
     let mut _edge_repair1: EdgeRepair1 = Pattern::new(60, 10);
     let mut _edge_repair2: EdgeRepair1 = Pattern::new(110, 50);
@@ -54,14 +90,14 @@ fn main() {
     let mut _toad2: Toad = Pattern::new(30, 49);
     let mut _toad2: Toad = Pattern::new(50, 20);
     
-    universe.add_pattern(&mut _glider);
-    universe.add_pattern(&mut _toad1);
-    universe.add_pattern(&mut _toad2);
-    universe.add_pattern(&mut _edge_repair1);
-    universe.add_pattern(&mut _edge_repair2);
-    universe.add_pattern(&mut _gun1);
-    universe.add_pattern(&mut _gun2);
-    universe.add_pattern(&mut _gun3);
+    // life.add_pattern(&mut _glider);
+    // life.add_pattern(&mut _toad1);
+    // life.add_pattern(&mut _toad2);
+    // life.add_pattern(&mut _edge_repair1);
+    // life.add_pattern(&mut _edge_repair2);
+    // life.add_pattern(&mut _gun1);
+    // life.add_pattern(&mut _gun2);
+    // life.add_pattern(&mut _gun3);
 
     let opengl = OpenGL::V3_2;
     let (width, height) = (WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -78,6 +114,13 @@ fn main() {
         &canvas,
         &TextureSettings::new()
     ).unwrap();
+
+    let assets = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("fonts").unwrap();
+    println!("{:?}", assets);
+    let ref font = assets.join("Meslo-LG.ttf");
+    let factory = window.factory.clone();
+    let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
 
 
@@ -111,13 +154,16 @@ fn main() {
     let mut _koks_galaxy: KoksGalaxy = Pattern::new(5, 40);
     _koks_galaxy.print();
 
-    universe.add_pattern(&mut _pulsar);
-    universe.add_pattern(&mut _pentadecathlon);
-    universe.add_pattern(&mut _koks_galaxy);
+    life.add_pattern(&mut _pulsar);
+    life.add_pattern(&mut _pentadecathlon);
+    life.add_pattern(&mut _koks_galaxy);
+
+    let mut fps = FPSCounter::new();
 
     while let Some(e) = window.next() {
 
         if let Some(_) = e.render_args() {
+
             texture.update(&mut window.encoder, &canvas).unwrap();
 
             window.draw_2d(&e, |c, g| {
@@ -130,7 +176,7 @@ fn main() {
 
                     for wi in 0..GAME_WIDTH {
                         let wp = wi as f64 * BLOCK_SIZE;
-                        if universe.cells()[universe.get_index(hi as i32, wi as i32)] {
+                        if life.cells()[life.get_index(hi as i32, wi as i32)] {
                             rectangle(
                                 WHITE,
                                 [wp as f64, hp as f64, BLOCK_SIZE, BLOCK_SIZE],
@@ -141,7 +187,16 @@ fn main() {
                     }
                 }
 
-                universe.next_generation();
+                let frame_rate = format!("{}fps", &fps.tick().to_string());
+                let fps_transform = c.transform.trans(10.0, WINDOW_HEIGHT as f64 - 10.0);
+                text::Text::new_color(GRAY, 16).draw(
+                    &frame_rate,
+                    &mut glyphs,
+                    &c.draw_state,
+                    fps_transform, g
+                ).unwrap();
+
+                life.next_generation();
             });
         }
 

@@ -7,20 +7,20 @@ use std::thread;
 const TICK_RATE: u64 = 0; // ms
 
 #[derive(Debug)]
-pub struct Universe {
+pub struct LifeAlgorithm {
     width: u32,
     height: u32,
     cells: Vec<bool>,
 }
 
-impl Universe {
+impl LifeAlgorithm {
 
     pub fn cells(&self) -> Vec<bool> {
         self.cells.clone()
     }
 
-    pub fn new(width: u32, height: u32) -> Universe {
-        Universe {
+    pub fn new(width: u32, height: u32) -> LifeAlgorithm {
+        LifeAlgorithm {
             width, height,
             cells: vec![false; (width*height) as usize],
         }
