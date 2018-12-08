@@ -1,106 +1,156 @@
 extern crate piston_window;
 extern crate image as im;
 extern crate find_folder;
-
 use piston_window::*;
+use std::time::{Duration, Instant};
+use std::collections::VecDeque;
 
-const BLOCK_SIZE: f64 = 5.0;
-const GAME_WIDTH: u32 = 100;
-const GAME_HEIGHT: u32 = 100;
-const WINDOW_WIDTH: u32 = GAME_WIDTH * BLOCK_SIZE as u32;
-const WINDOW_HEIGHT: u32 = GAME_HEIGHT * BLOCK_SIZE as u32;
+// Life. Optimized for speed using fixed sized bit arrays
+// Todo: Multi-threaded next gen calculation
 
+// game width
+const GW: u64 = 64*4;
+// game height
+const GH: u64 = 64*4;
+// window width
+const WW: u64 = 600;
+// window height
+const WH: u64 = 600;
+// block size
+const BS: f64 = (WW as f64 / GW as f64);
+// array width (fixed u64 size)
+const AW: usize = 64;
+// array height
+const AH: usize = (GW / AW as u64 * GH) as usize;
+// row width
+const RW: usize = (GW / AW as u64) as usize;
+// color definitions
 const GRAY: [f32; 4] = [0.2, 0.2, 0.2, 1.0];
 const WHITE: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 const DARK: [f32; 4] = [0.1, 0.1, 0.1, 1.0];
 
-mod life;
-mod patterns;
-mod spaceships;
-mod oscillators;
-mod guns;
-mod still_lifes;
 
-use still_lifes::Block;
-use still_lifes::Beehive;
-use still_lifes::Loaf;
-use still_lifes::Boat;
-use still_lifes::Tub;
+struct Life {
+    board: [u64; AH],
+}
 
-use oscillators::Blinker;
-use oscillators::Beacon;
-use oscillators::Pulsar;
-use oscillators::Pentadecathlon;
-use oscillators::KoksGalaxy;
+impl Life {
 
-use life::LifeAlgorithm;
-use patterns::Pattern;
-use spaceships::Glider;
-use spaceships::EdgeRepair1;
-use oscillators::Toad;
-use guns::GospersGliderGun;
+    fn new() -> Self {
+        Life { board: [0; AH] }
+    }
+
+    fn validate(x: u64, y: u64) {
+        if x > GW || y > GH {
+            panic!("counldn't set ({}, {}): out of bounds", x, y);
+        }
+    }
+
+    fn position(x: u64, y: u64) -> (usize, u64) {
+        Life::validate(x, y);
+        let i: usize = (y * RW as u64 + x / AW as u64) as usize;
+        let pos: u64 = x % AW as u64;
+        (i, pos)
+    }
+
+    fn seed(&mut self,  x: u64, y: u64) {
+        let (i, pos) = Life::position(x, y);
+        self.board[i] |= 1<<pos;
+    }
+
+    fn set_bit(&mut self, a: &mut [u64; AH], x: u64, y: u64) {
+        let (i, pos) = Life::position(x, y);
+        a[i] |= 1<<pos;
+    }
+
+    fn clear_bit(&mut self, a: &mut [u64; AH], x: u64, y: u64) {
+        let (i, pos) = Life::position(x, y);
+        a[i] &= !(1<<pos);
+    }
+
+    fn test_bit(&mut self, x: u64, y: u64) -> bool {
+        let (i, pos) = Life::position(x, y);
+        self.board[i] & (1<<pos) != 0
+    }
+
+    fn live_neighbours(&mut self, x: i64, y: i64) -> u8 {
+        let mut n = 0;
+        for row in y-1..y+2 {
+            for col in x-1..x+2 {
+                if (row >= 0 && row < GH as i64)
+                && (col >= 0 && col < GW as i64)
+                && !(row == y && col == x)
+                && self.test_bit(col as u64, row as u64) {
+                    n += 1;
+                }
+            }
+        }
+        n
+    }
+
+    fn next_gen(&mut self) {
+        let mut next = self.board.clone();
+        for y in 0..GH {
+            for x in 0..GW {
+                let n = self.live_neighbours(x as i64, y as i64);
+                match self.test_bit(x, y) {
+                    true => {
+                        if n > 1 && n < 4 {
+                            self.set_bit(&mut next, x, y);
+                        } else {
+                            self.clear_bit(&mut next, x, y);
+                        }
+                    },
+                    false => if n == 3 {
+                        self.set_bit(&mut next, x, y);
+                    },
+                }
+            }
+        }
+        self.board = next;
+    }
+
+}
 
 
-// A Frames Per Second counter.
 
-use std::collections::VecDeque;
-use std::time::{Duration, Instant};
-
-/// Measures Frames Per Second (FPS).
 pub struct FPSCounter {
-    /// The last registered frames.
     last_second_frames: VecDeque<Instant>
 }
 
 impl FPSCounter {
-    /// Creates a new FPSCounter.
     pub fn new() -> FPSCounter {
         FPSCounter {
             last_second_frames: VecDeque::with_capacity(128)
         }
     }
-
-    /// Updates the FPSCounter and returns number of frames.
     pub fn tick(&mut self) -> usize {
         let now = Instant::now();
         let a_second_ago = now - Duration::from_secs(1);
-
         while self.last_second_frames.front().map_or(false, |t| *t < a_second_ago) {
             self.last_second_frames.pop_front();
         }
-
         self.last_second_frames.push_back(now);
         self.last_second_frames.len()
     }
 }
 
 
-
 fn main() {
+    let mut life = Life::new();
 
-    let mut life = LifeAlgorithm::new(GAME_WIDTH, GAME_HEIGHT);
+    // acorn pattern
+    life.seed(101, 100);
+    life.seed(103, 101);
+    life.seed(104, 102);
+    life.seed(105, 102);
+    life.seed(106, 102);
+    life.seed(100, 102);
+    life.seed(101, 102);
 
-    let mut _edge_repair1: EdgeRepair1 = Pattern::new(60, 10);
-    let mut _edge_repair2: EdgeRepair1 = Pattern::new(110, 50);
-    let mut _gun1: GospersGliderGun = Pattern::new(5, 5);
-    let mut _gun2: GospersGliderGun = Pattern::new(50, 45);
-    let mut _gun3: GospersGliderGun = Pattern::new(30, 75);
-    let mut _glider: Glider = Pattern::new(15, 22);
-    let mut _toad1: Toad = Pattern::new(26, 20);
-    let mut _toad2: Toad = Pattern::new(30, 49);
-    let mut _toad2: Toad = Pattern::new(50, 20);
-    
-    // life.add_pattern(&mut _glider);
-    // life.add_pattern(&mut _toad1);
-    // life.add_pattern(&mut _toad2);
-    // life.add_pattern(&mut _edge_repair1);
-    // life.add_pattern(&mut _edge_repair2);
-    // life.add_pattern(&mut _gun1);
-    // life.add_pattern(&mut _gun2);
-    // life.add_pattern(&mut _gun3);
 
     let opengl = OpenGL::V3_2;
-    let (width, height) = (WINDOW_WIDTH, WINDOW_HEIGHT);
+    let (width, height) = (WW as u32, WH as u32);
     let mut window: PistonWindow =
         WindowSettings::new("Game of Life", (width, height))
         .exit_on_esc(true)
@@ -122,48 +172,11 @@ fn main() {
     let factory = window.factory.clone();
     let mut glyphs = Glyphs::new(font, factory, TextureSettings::new()).unwrap();
 
-
-
-    let mut _block: Block = Pattern::new(5, 5);
-    // _block.print();
-    
-    let mut _beehive: Beehive = Pattern::new(5, 5);
-    // _beehive.print();
-
-    let mut _loaf: Loaf = Pattern::new(5, 5);
-    // _loaf.print();
-
-    let mut _boat: Boat = Pattern::new(5, 5);
-    // _boat.print();
-
-    let mut _tub: Tub = Pattern::new(5, 5);
-    // _tub.print();
-
-    let mut _blinker: Blinker = Pattern::new(5, 5);
-    // _blinker.print();
-
-    let mut _beacon: Beacon = Pattern::new(5, 5);
-    // _beacon.print();
-
-    let mut _pulsar: Pulsar = Pattern::new(5, 20);
-    // _pulsar.print();
-
-    let mut _pentadecathlon: Pentadecathlon = Pattern::new(5, 5);
-    // _pentadecathlon.print();
-
-    let mut _koks_galaxy: KoksGalaxy = Pattern::new(5, 40);
-    _koks_galaxy.print();
-
-    life.add_pattern(&mut _pulsar);
-    life.add_pattern(&mut _pentadecathlon);
-    life.add_pattern(&mut _koks_galaxy);
-
-    let mut fps = FPSCounter::new();
+    let mut fps_counter = FPSCounter::new();
 
     while let Some(e) = window.next() {
 
         if let Some(_) = e.render_args() {
-
             texture.update(&mut window.encoder, &canvas).unwrap();
 
             window.draw_2d(&e, |c, g| {
@@ -171,24 +184,23 @@ fn main() {
                 clear(DARK, g);
                 image(&texture, c.transform, g);
 
-                for hi in 0..GAME_HEIGHT {
-                    let hp = hi as f64 * BLOCK_SIZE;
-
-                    for wi in 0..GAME_WIDTH {
-                        let wp = wi as f64 * BLOCK_SIZE;
-                        if life.cells()[life.get_index(hi as i32, wi as i32)] {
+                for hi in 0..GH {
+                    let hp = hi as f64 * BS;
+                    for wi in 0..GW {
+                        let wp = wi as f64 * BS;
+                        if life.test_bit(hi, wi) {
                             rectangle(
-                                WHITE,
-                                [wp as f64, hp as f64, BLOCK_SIZE, BLOCK_SIZE],
-                                c.transform,
-                                g
+                                WHITE, [wp as f64, hp as f64, BS, BS],
+                                c.transform, g
                             );
                         }
                     }
                 }
+                life.next_gen();
 
-                let frame_rate = format!("{}fps", &fps.tick().to_string());
-                let fps_transform = c.transform.trans(10.0, WINDOW_HEIGHT as f64 - 10.0);
+                let frame_rate = format!("{}fps", &fps_counter.tick().to_string());
+                let fps_transform = c.transform.trans(10.0, WH as f64 - 10.0);
+
                 text::Text::new_color(GRAY, 16).draw(
                     &frame_rate,
                     &mut glyphs,
@@ -196,9 +208,10 @@ fn main() {
                     fps_transform, g
                 ).unwrap();
 
-                life.next_generation();
             });
         }
 
     }
 }
+
+
