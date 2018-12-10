@@ -184,7 +184,7 @@ pub fn get_rle_pattern(dir_path: String) -> Pattern {
     )
     }).collect::<Vec<String>>();
 
-    for (i, rle_path) in rle_paths.iter().enumerate() {
+    for (i, rle_path) in rle_paths.iter().enumerate().rev() {
         println!("[{}] {}", i, rle_path);
     }
 

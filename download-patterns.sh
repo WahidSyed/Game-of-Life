@@ -5,8 +5,6 @@ OUTPUT_FILE="patterns.zip"
 WGET=`which wget`
 CURL=`which curl`
 
-mkdir -p patterns/
-
 if [ ! -z $WGET ]
 then
     $WGET $URL -O $OUTPUT_FILE
@@ -18,6 +16,8 @@ else
         echo "Error downloading patterns"
     fi
 fi
+
+mkdir -p patterns/
 
 echo "Unpacking patterns..."
 unzip -o $OUTPUT_FILE -d patterns/

@@ -1,8 +1,8 @@
 
 // game width
-pub const GW: u64 = 64*4;
+pub const GW: u64 = 64*32;
 // game height
-pub const GH: u64 = 64*4;
+pub const GH: u64 = 64*32;
 
 // window width
 pub const WW: u64 = 600;
