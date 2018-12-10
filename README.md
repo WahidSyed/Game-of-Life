@@ -24,9 +24,9 @@ The grid is stored in an array of 64 bit unsigned integers, with each cell occup
 
 And here are a few benchmarks I ran at different sizes (2.4 GHz Intel Core i5):
 
-Size | Cells | FPS | ms/Generation
+Size | Cells | FPS | s/Generation
 -----|-------|-----|---------------
-256x256 | 65,536 | 60fps+ | 0.016ms
-512x512 | 262,144 | ~50fps | 0.020ms
-1024x1024 | 1,048,576 | ~24fps | 0.042ms
-2048x2048 | 4,194,304 | ~2fps | 0.500ms
+256x256 | 65,536 | 60fps+ | 0.016s
+512x512 | 262,144 | ~50fps | 0.020s
+1024x1024 | 1,048,576 | ~24fps | 0.042s
+2048x2048 | 4,194,304 | ~2fps | 0.500s
