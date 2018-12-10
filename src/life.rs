@@ -1,11 +1,6 @@
 use pattern::Pattern;
 use decoder::RleDecoder;
-
-use AW;
-use AH;
-use GW;
-use GH;
-use RW;
+use config::*;
 
 pub struct Life {
     board: [u64; AH],
