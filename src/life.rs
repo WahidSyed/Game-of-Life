@@ -1,97 +1,109 @@
+use pattern::Pattern;
+use decoder::RleDecoder;
 
-use patterns::Pattern;
+use AW;
+use AH;
+use GW;
+use GH;
+use RW;
 
-use std::time::Duration;
-use std::thread;
-
-const TICK_RATE: u64 = 0; // ms
-
-#[derive(Debug)]
-pub struct LifeAlgorithm {
-    width: u32,
-    height: u32,
-    cells: Vec<bool>,
+pub struct Life {
+    board: [u64; AH],
 }
 
-impl LifeAlgorithm {
+impl Life {
 
-    pub fn cells(&self) -> Vec<bool> {
-        self.cells.clone()
+    pub fn new() -> Self {
+        Life { board: [0; AH] }
     }
 
-    pub fn new(width: u32, height: u32) -> LifeAlgorithm {
-        LifeAlgorithm {
-            width, height,
-            cells: vec![false; (width*height) as usize],
+    fn validate(x: u64, y: u64) {
+        if x > GW || y > GH {
+            panic!("counldn't set ({}, {}): out of bounds", x, y);
         }
     }
 
-    pub fn get_index(&self, row: i32, col: i32) -> usize {
-        let h = self.height as i32;
-        let w = self.width as i32;
-        let r = ((row % h) + h) % h;
-        let c = ((col % w) + w) % w;
-        (r * w + c) as usize
+    fn position(x: u64, y: u64) -> (usize, u64) {
+        Life::validate(x, y);
+        let i: usize = (y * RW as u64 + x / AW as u64) as usize;
+        let pos: u64 = x % AW as u64;
+        (i, pos)
     }
 
-    fn live_neighbours(&self, row: i32, col: i32) -> u8 {
-        let mut count = 0;
-        let h = self.height as i32;
-        let w = self.width as i32;
-        for r in row-1..row+2 {
-            for c in col-1..col+2 {
-                if (r >= 0 && r < h)
-                && (c >= 0 && c < w)
-                && !(r == row && c == col)
-                && self.cells[self.get_index(r as i32, c as i32)]
-                {
-                    count += 1;
+    fn seed(&mut self, x: u64, y: u64) {
+        let (i, pos) = Life::position(x, y);
+        self.board[i] |= 1<<pos;
+    }
+
+    fn set_bit(&mut self, a: &mut [u64; AH], x: u64, y: u64) {
+        let (i, pos) = Life::position(x, y);
+        a[i] |= 1<<pos;
+    }
+
+    fn clear_bit(&mut self, a: &mut [u64; AH], x: u64, y: u64) {
+        let (i, pos) = Life::position(x, y);
+        a[i] &= !(1<<pos);
+    }
+
+    pub fn test_bit(&mut self, x: u64, y: u64) -> bool {
+        let (i, pos) = Life::position(x, y);
+        self.board[i] & (1<<pos) != 0
+    }
+
+    fn live_neighbours(&mut self, x: i64, y: i64) -> u8 {
+        let mut n = 0;
+        for row in y-1..y+2 {
+            for col in x-1..x+2 {
+                if (row >= 0 && row < GH as i64)
+                && (col >= 0 && col < GW as i64)
+                && !(row == y && col == x)
+                && self.test_bit(col as u64, row as u64) {
+                    n += 1;
                 }
             }
         }
-        count
+        n
     }
 
-    pub fn next_generation(&mut self) {
-        let mut next = self.cells.clone();
-
-        for row in 0..self.height {
-            for col in 0..self.width {
-
-                let index = self.get_index(row as i32, col as i32);
-                let n = self.live_neighbours(row as i32, col as i32);
-
-                match self.cells[index] {
+    pub fn next_gen(&mut self) {
+        let mut next = self.board.clone();
+        for y in 0..GH {
+            for x in 0..GW {
+                let n = self.live_neighbours(x as i64, y as i64);
+                match self.test_bit(x, y) {
                     true => {
                         if n > 1 && n < 4 {
-                            next[index] = true;
+                            self.set_bit(&mut next, x, y);
                         } else {
-                            next[index] = false;
+                            self.clear_bit(&mut next, x, y);
                         }
                     },
-                    false => {
-                        if n == 3 {
-                            next[index] = true;
-                        }
+                    false => if n == 3 {
+                        self.set_bit(&mut next, x, y);
                     },
                 }
-
             }
         }
-        self.cells = next;
-        thread::sleep(Duration::from_millis(TICK_RATE))
+        self.board = next;
     }
 
-    pub fn add_pattern<P: Pattern>(&mut self, p: &mut P) {
-        for x in 0..p.height() {
-            for y in 0..p.width() {
-                let i1 = p.get_index(x as i32, y as i32);
-                let i2 = self.get_index((x + p.x() as u32) as i32, (y + p.y() as u32) as i32);
-                self.cells[i2] = p.structure()[i1];
+    pub fn add_pattern(&mut self, p: Pattern, (offset_x, offset_y): (u64, u64)) {
+        p.print_meta();
+        p.print_pattern();
+        println!();
+        
+        for y in 0..p.height {
+            for x in 0..p.width {
+                match p.structure[RleDecoder::index(y, x, p.width)] {
+                    1 => self.seed(y+offset_y, x+offset_x),
+                    _ => (),
+                }
             }
         }
+
     }
 
 }
+
 
 
