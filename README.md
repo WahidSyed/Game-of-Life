@@ -10,6 +10,14 @@
 
 *Conway's Game of Life* is a fascinating cellular automaton. This is my implementation of the game in Rust, built on a Piston game engine. Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
+### Usage
+```
+git clone https://github.com/jdansev/game-of-life
+cd game-of-life
+sh download-patterns.sh
+cargo run --release
+```
+
 ### Patterns
 Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle (run-length encoded) files. My program includes a decoder that can parse this format and use it to seed the game board.
 
@@ -25,11 +33,3 @@ Size | FPS | ms/Generation
 512x512 | ~50fps | 0.020ms
 1024x1024 | ~24fps | 0.042ms
 2048x2048 | ~2fps | 0.50ms
-
-### Usage
-```
-git clone https://github.com/jdansev/game-of-life
-cd game-of-life
-sh download-patterns.sh
-cargo run --release
-```
