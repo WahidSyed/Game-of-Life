@@ -29,7 +29,7 @@ And here are a few benchmarks I ran at different sizes (2.4 GHz Intel Core i5):
 
 Size | FPS | ms/Generation
 -----|-----|----------
-256x256 | 60fps+ | 0.016ms
-512x512 | ~50fps | 0.020ms
-1024x1024 | ~24fps | 0.042ms
-2048x2048 | ~2fps | 0.50ms
+256x256 (65,536 cells) | 60fps+ | 0.016ms
+512x512 (262,144 cells) | ~50fps | 0.020ms
+1024x1024 (1,048,576 cells) | ~24fps | 0.042ms
+2048x2048 (4,194,304 cells) | ~2fps | 0.50ms
