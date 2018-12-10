@@ -2,10 +2,8 @@
 
 <p align="left">
   <img src="./turingmachine.png" width="400" >
+  *Pattern: Turing Machine*
 </p>
-
-### Pattern: Turing Machine
-
 
 *Conway's Game of Life* is a fascinating cellular automaton. This is my implementation of the game in Rust, built on a Piston game engine. Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
