@@ -2,10 +2,12 @@
 
 <p align="left">
   <img src="./turingmachine.png" width="400" >
-  <br><span style="font-size:8px">Pattern: Turing Machine<span>
 </p>
 
-Conway's Game of Life is a fascinating cellular automaton. This is my implementation of the game in Rust, built on a Piston game engine. Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+### Pattern: Turing Machine
+
+
+*Conway's Game of Life* is a fascinating cellular automaton. This is my implementation of the game in Rust, built on a Piston game engine. Theory: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
 ### Patterns
 Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle files (run-length encoded). My program includes a decoder that can parse this format and use it to seed the game board.
