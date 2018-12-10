@@ -1,7 +1,7 @@
 # Conway's Game of Life
 
 <p align="left">
-  <img src="./turingmachine.png" width="300" >
+  <img src="./turingmachine.png" width="400" >
 </p>
 
 Conway's Game of Life is a fascinating cellular automaton. This is implementation of the game in Rust, built on a Piston game engine.
