@@ -1,4 +1,4 @@
-# Conway's Game of Life
+## Conway's Game of Life
 
 <p align="left">
   <img src="./turingmachine.png" width="400" >
