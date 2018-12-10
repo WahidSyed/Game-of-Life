@@ -19,7 +19,7 @@ cargo run --release
 ```
 
 ### Patterns
-Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle (run-length encoded) files. My program includes a decoder that can parse this format and use it to seed the game board.
+Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle (run-length encoded) files. This must be done before running. My program includes a decoder that can parse this format and use it to seed the game board.
 
 ### Performance
 My version of Life is implemented using bit manipulation techniques and a fixed sized 64 bit array. This particular  implementation was chosen over dynamic implementations like vectors for maximum performance. The tradeoff is that changing the game size requires modifying the config.rs, since the size of this type of array must be known by Rust at compile time.
