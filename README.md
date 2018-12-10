@@ -2,8 +2,9 @@
 
 <p align="left">
   <img src="./turingmachine.png" width="400" >
+  <br/>pattern: Turing Machine
 </p>
-Pattern: Turing Machine
+
 
 
 
