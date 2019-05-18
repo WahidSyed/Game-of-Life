@@ -20,9 +20,9 @@ cargo run --release
 Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle (run-length encoded) files. This must be done before running. My program includes a decoder that can parse this format and use it to seed the grid. The full list of patterns and their descriptions can be found [here](http://www.conwaylife.com/wiki/Category:Patterns).
 
 ### Performance
-The grid is stored in an array of 64 bit unsigned integers, with each cell occupying 1 bit. This representation was chosen over dynamic data structures like vectors for maximum performance. The tradeoff is that changing the game size requires modifying the config.rs file (located in the src folder), since the size of static arrays must be known by Rust at compile time. Also note that the game size must be of the form 64 * 2^n.
+The grid is stored in an array of 64 bit unsigned integers, with each cell occupying 1 bit. This representation was chosen over dynamic data structures like vectors for maximum performance. The tradeoff is that changing the grid size requires modifying the config.rs file (located in the src folder), since the size of static arrays must be known by Rust at compile time. Also note that the game size must be of the form 64 * 2^n.
 
-And here are a few benchmarks I ran at different sizes (2.4 GHz Intel Core i5):
+And here are a few benchmarks I ran at different sized grids (2.4 GHz Intel Core i5):
 
 Size | Cells | FPS | s/Generation
 -----|-------|-----|---------------
