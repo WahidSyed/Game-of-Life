@@ -19,7 +19,7 @@ cargo run --release
 ### Patterns
 Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle (run-length encoded) files. This must be done before running. My program includes a decoder that can parse this format and use it to seed the grid. The full list of patterns and their descriptions can be found [here](http://www.conwaylife.com/wiki/Category:Patterns).
 
-### Cool Patterns
+### Cool Examples
 #1482 - Pufferfish Breeder (set game size to 64x16)  
 #247 - Turing Machine (set game size to 64x32)  
 #2056 - Gosper Glider Gun (set game size to 64x2)  
