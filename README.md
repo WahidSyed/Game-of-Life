@@ -16,7 +16,7 @@ sh download-patterns.sh
 cargo run --release
 ```
 
-#1481 - Pufferfish Breeder  
+#1482 - Pufferfish Breeder  
 #247 - Turing Machine
 
 
