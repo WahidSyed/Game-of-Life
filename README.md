@@ -16,8 +16,9 @@ sh download-patterns.sh
 cargo run --release
 ```
 
-#1482 - Pufferfish Breeder  
-#247 - Turing Machine
+#1482 - Pufferfish Breeder (set game width/height to 64*16)  
+#247 - Turing Machine (set game width/height to 64*32)  
+#2056 - Gosper Glider Gun (set game width/height to 64*4)  
 
 
 ### Patterns
