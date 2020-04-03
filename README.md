@@ -18,7 +18,7 @@ cargo run --release
 
 #1482 - Pufferfish Breeder (set game size to 64*16)  
 #247 - Turing Machine (set game size to 64*32)  
-#2056 - Gosper Glider Gun (set game size to 64*4)  
+#2056 - Gosper Glider Gun (set game size to 64*2)  
 
 
 ### Patterns
