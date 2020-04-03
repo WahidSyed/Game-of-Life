@@ -16,6 +16,10 @@ sh download-patterns.sh
 cargo run --release
 ```
 
+#1481 - Pufferfish Breeder
+#247 - Turing Machine
+
+
 ### Patterns
 Patterns are downloaded with the script `download-patterns.sh` which come as 1896 .rle (run-length encoded) files. This must be done before running. My program includes a decoder that can parse this format and use it to seed the grid. The full list of patterns and their descriptions can be found [here](http://www.conwaylife.com/wiki/Category:Patterns).
 
